@@ -73,9 +73,9 @@ class RegressionModel:
 
         for dim_array in train_args[0][1:]:
             #print("heres the size", dim_array.size)
-            og_s = dim_array.shape
+    
             reshaped_train_args.append(dim_array.reshape(dim_array.shape))
-            og_shapes.append(og_shape)
+
             
         for each_array, i in zip(train_args[0], range(len(train_args[0]))):
             #print(each_array)
@@ -84,9 +84,7 @@ class RegressionModel:
             #print(train_args[0][i].shape)
         
         
-        #scaler = preprocessing.StandardScaler().fit(X_train)
-        #X_scaled = scaler.transform(X_train)
-        #print("train_args[0]", train_args[0])
+
         scaler = self._scaler.fit(train_args[0])
         scaled_output = scaler.transform(train_args[0])
         #scale2 = self._scaler.fit(train_args[0][2:-1])
@@ -350,25 +348,7 @@ class RegGridInterp(RegressionModel):
         #print("Y1.shape", Y1.shape)
         #Z1 = z.flatten()
         
-        #ar_len=len(X1) -1
-        #print("ar_len", ar_len)
-        #X=np.arange(len(X1),dtype=float)
-        #print("X.shape", X.shape)
-        #Y=np.arange(len(Y1),dtype=float)
-        #print("Y.shape", Y.shape)
-        #Z=np.arange(len(Z1),dtype=float)
-        #print("Z.shape", Z.shape)
-        #l=0
-        #for i in range(0,ar_len):
-        #    for j in range(0,ar_len):
-        #        for k in range(0,ar_len):
-        #            X[l]=X1[i]
-        #            Y[l]=Y1[j]
-        #            Z[l]=Z1[k]
-        #    l=l+1
-        #v = temperatures
-        #interpolate "data.v" on new grid "X,Y,Z"
-        #print("Interpolate...")
+
         #V = griddata((x,y,z), v, (X,Y,Z), method='linear')
         
         #return(V, (x, y, z), (X,Y,Z))
