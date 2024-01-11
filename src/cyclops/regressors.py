@@ -508,7 +508,14 @@ class CSModel(RegressionModel):
         if num_input_dim != 1:
             raise Exception("Input data should have d = 1 dimensions.")
 
-    def fit(
+    def fit(self, train_x: np.ndarray[float], train_y: np.ndarray[float]) -> None:
+        """Fit the model to some training data.
+
+        Args:
+            train_x (np.ndarray[float]): n by d array of n training inputs with
+                d dimensions.
+            train_y (np.ndarray[float]): n by 1 array of n training outputs.
+        """
         self, train_x: np.ndarray[float], train_y: np.ndarray[float]
     ) -> None:
         """Fit the model to some training data.
