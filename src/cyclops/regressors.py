@@ -490,15 +490,7 @@ class PModel(RegressionModel):
             train_y (np.ndarray[float]): n by 1 array of n training outputs.
         """
         scaled_x = self.prepare_fit(train_x, train_y)
-        pos_val_matrix = np.concatenate(
-            (scaled_x, train_y.reshape(-1, 1)), axis=1
-        )
-        pos_val_matrix = pos_val_matrix[pos_val_matrix[:, 0].argsort()]
-
-        self._regressor = np.polynomial.polynomial.Polynomial.fit(
-            pos_val_matrix[:, 0].reshape(-1),
-            pos_val_matrix[:, 1].reshape(-1),
-            deg=self._degree,
+        self._regressor = np.polyfit(scaled_x[:,0], train_y, deg=self._degree)
         )
 
     def predict(self, predict_x: np.ndarray[float]) -> np.ndarray[float]:
