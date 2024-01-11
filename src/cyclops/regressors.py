@@ -108,6 +108,7 @@ class RegressionModel:
                 dimension d.
         """
         self.check_dim(len(predict_x[0]), self._x_dim, "Input")
+        self.check_dim(len(predict_x[0]), self._x_dim, "predict")
         return self._scaler.transform(predict_x)
 
     def check_dim(self, dim: int, correct_dim: int, data_name: str) -> None:
