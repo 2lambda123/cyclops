@@ -181,7 +181,7 @@ class RBFModel(RegressionModel):
             train_y (np.ndarray[float]): n by 1 array of n training outputs.
         """
         scaled_x = self.prepare_fit(train_x, train_y)
-        self._regressor = RBFInterpolator(train_x, train_y)
+        self._regressor = RegularGridInterpolator((x, y, z), field_data, method='linear')
 
     def predict(self, predict_x: np.ndarray[float]) -> np.ndarray[float]:
         """Return n predicted outputs of dimension 1 given inputs.
@@ -281,7 +281,7 @@ class RegGridInterp(RegressionModel):
             training inputs with d dimensions each. The last argument MUST be values at points described by other arguments.
         """
         
-        pos_data = pos_data.T
+        pos_data = list(pos_data)
          
         x = np.array(pos_data[0])
         y = np.array(pos_data[1])
