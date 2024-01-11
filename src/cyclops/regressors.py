@@ -436,6 +436,7 @@ class GPModel(RegressionModel):
             train_y (np.ndarray[float]): n by 1 array of n training outputs.
         """
         scaled_x = self.prepare_fit(train_x, train_y)
+        scaled_x_gp_model = self.prepare_fit(train_x, train_y)
         self._regressor = GaussianProcessRegressor(
             kernel=RBF(), n_restarts_optimizer=10, normalize_y=True
         )
