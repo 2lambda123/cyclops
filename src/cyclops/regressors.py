@@ -141,9 +141,7 @@ class RegressionModel:
         """
         if length < self._min_length:
             raise Exception(
-                "Input data should have a length of >= "
-                + str(self._min_length)
-                + "."
+                f"Input data should have a length of >= {self._min_length}."
             )
 
 
@@ -165,6 +163,9 @@ class RBFModel(RegressionModel):
         Raises:
             Exception: error to explain user's mistake.
         """
+        self._min_length = min_length
+        self._min_length = min_length
+        self._min_length = min_length
         super().__init__(num_input_dim, 2)
         if num_input_dim <= 0:
             raise Exception("Input data should have d >= 1 dimensions.")
