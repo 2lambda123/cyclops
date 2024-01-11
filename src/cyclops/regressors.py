@@ -69,7 +69,6 @@ class RegressionModel:
         
         
         
-        og_shapes = []
         reshaped_train_args = []
 
         for dim_array in train_args[0][1:]:
