@@ -380,7 +380,7 @@ class RegGridInterp(RegressionModel):
         """
         scaled_x = self.prepare_predict(predict_x)
         value = self._regressor(scaled_x).reshape(-1, 1)
-        return value
+        return value.reshape(-1)
 ######    
 
 
