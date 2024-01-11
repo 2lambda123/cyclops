@@ -54,7 +54,7 @@ class RegressionModel:
         self._min_length = min_length
 
     def prepare_fit(
-        self, *train_args: np.ndarray[float]) -> np.ndarray[float]:
+        self, *train_args: np.ndarray[float]) -> (np.ndarray[float], list[tuple]):
         """Check training data dimensions #and normalise#.
 
         Args:
@@ -70,11 +70,12 @@ class RegressionModel:
         
         
         og_shapes = []
+        reshaped_train_args = []
 
         for dim_array in train_args[0][1:]:
             #print("heres the size", dim_array.size)
             og_s = dim_array.shape
-            og_shape = dim_array.reshape(og_s)
+            reshaped_train_args.append(dim_array.reshape(dim_array.shape))
             og_shapes.append(og_shape)
             
         for each_array, i in zip(train_args[0], range(len(train_args[0]))):
