@@ -73,9 +73,9 @@ class RegressionModel:
 
         for dim_array in train_args[0][1:]:
             #print("heres the size", dim_array.size)
-            og_s = dim_array.shape
+    
             reshaped_train_args.append(dim_array.reshape(dim_array.shape))
-            og_shapes.append(og_shape)
+
             
         for each_array, i in zip(train_args[0], range(len(train_args[0]))):
             #print(each_array)
@@ -84,9 +84,7 @@ class RegressionModel:
             #print(train_args[0][i].shape)
         
         
-        #scaler = preprocessing.StandardScaler().fit(X_train)
-        #X_scaled = scaler.transform(X_train)
-        #print("train_args[0]", train_args[0])
+
         scaler = self._scaler.fit(train_args[0])
         scaled_output = scaler.transform(train_args[0])
         #scale2 = self._scaler.fit(train_args[0][2:-1])
@@ -110,6 +108,7 @@ class RegressionModel:
                 dimension d.
         """
         self.check_dim(len(predict_x[0]), self._x_dim, "Input")
+        self.check_dim(len(predict_x[0]), self._x_dim, "predict")
         return self._scaler.transform(predict_x)
 
     def check_dim(self, dim: int, correct_dim: int, data_name: str) -> None:
@@ -142,9 +141,7 @@ class RegressionModel:
         """
         if length < self._min_length:
             raise Exception(
-                "Input data should have a length of >= "
-                + str(self._min_length)
-                + "."
+                f"Input data should have a length of >= {self._min_length}."
             )
 
 
@@ -166,6 +163,9 @@ class RBFModel(RegressionModel):
         Raises:
             Exception: error to explain user's mistake.
         """
+        self._min_length = min_length
+        self._min_length = min_length
+        self._min_length = min_length
         super().__init__(num_input_dim, 2)
         if num_input_dim <= 0:
             raise Exception("Input data should have d >= 1 dimensions.")
@@ -181,7 +181,7 @@ class RBFModel(RegressionModel):
             train_y (np.ndarray[float]): n by 1 array of n training outputs.
         """
         scaled_x = self.prepare_fit(train_x, train_y)
-        self._regressor = RBFInterpolator(scaled_x, train_y)
+        self._regressor = RegularGridInterpolator((x, y, z), field_data, method='linear')
 
     def predict(self, predict_x: np.ndarray[float]) -> np.ndarray[float]:
         """Return n predicted outputs of dimension 1 given inputs.
@@ -230,9 +230,7 @@ class LModel(RegressionModel):
             train_y (np.ndarray[float]): n by 1 array of n training outputs.
         """
         scaled_x = self.prepare_fit(train_x, train_y)
-        self._regressor = LinearNDInterpolator(
-            scaled_x, train_y, fill_value=np.mean(train_y)
-        )
+        self._regressor = np.polyfit(scaled_x[:,0], train_y, deg=self._degree)
 
     def predict(self, predict_x: np.ndarray[float]) -> np.ndarray[float]:
         """Return n predicted outputs of dimension 1 given inputs.
@@ -281,7 +279,7 @@ class RegGridInterp(RegressionModel):
             training inputs with d dimensions each. The last argument MUST be values at points described by other arguments.
         """
         
-        pos_data = pos_data.T
+        pos_data = list(pos_data)
          
         x = np.array(pos_data[0])
         y = np.array(pos_data[1])
@@ -350,25 +348,7 @@ class RegGridInterp(RegressionModel):
         #print("Y1.shape", Y1.shape)
         #Z1 = z.flatten()
         
-        #ar_len=len(X1) -1
-        #print("ar_len", ar_len)
-        #X=np.arange(len(X1),dtype=float)
-        #print("X.shape", X.shape)
-        #Y=np.arange(len(Y1),dtype=float)
-        #print("Y.shape", Y.shape)
-        #Z=np.arange(len(Z1),dtype=float)
-        #print("Z.shape", Z.shape)
-        #l=0
-        #for i in range(0,ar_len):
-        #    for j in range(0,ar_len):
-        #        for k in range(0,ar_len):
-        #            X[l]=X1[i]
-        #            Y[l]=Y1[j]
-        #            Z[l]=Z1[k]
-        #    l=l+1
-        #v = temperatures
-        #interpolate "data.v" on new grid "X,Y,Z"
-        #print("Interpolate...")
+
         #V = griddata((x,y,z), v, (X,Y,Z), method='linear')
         
         #return(V, (x, y, z), (X,Y,Z))
@@ -398,7 +378,7 @@ class RegGridInterp(RegressionModel):
         """
         scaled_x = self.prepare_predict(predict_x)
         value = self._regressor(scaled_x).reshape(-1, 1)
-        return value
+        return value.reshape(-1)
 ######    
 
 
@@ -452,7 +432,7 @@ class GPModel(RegressionModel):
             np.ndarray[float]: n by 1 array of n predicted 1D values.
         """
         scaled_x = self.prepare_predict(predict_x)
-        return self._regressor.predict(scaled_x).reshape(-1, 1)
+        return self._regressor.predict(scaled_x).reshape(-1)
 
 
 class PModel(RegressionModel):
@@ -528,7 +508,14 @@ class CSModel(RegressionModel):
         if num_input_dim != 1:
             raise Exception("Input data should have d = 1 dimensions.")
 
-    def fit(
+    def fit(self, train_x: np.ndarray[float], train_y: np.ndarray[float]) -> None:
+        """Fit the model to some training data.
+
+        Args:
+            train_x (np.ndarray[float]): n by d array of n training inputs with
+                d dimensions.
+            train_y (np.ndarray[float]): n by 1 array of n training outputs.
+        """
         self, train_x: np.ndarray[float], train_y: np.ndarray[float]
     ) -> None:
         """Fit the model to some training data.
