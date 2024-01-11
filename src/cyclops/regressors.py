@@ -230,9 +230,7 @@ class LModel(RegressionModel):
             train_y (np.ndarray[float]): n by 1 array of n training outputs.
         """
         scaled_x = self.prepare_fit(train_x, train_y)
-        self._regressor = LinearNDInterpolator(
-            scaled_x, train_y, fill_value=np.mean(train_y)
-        )
+        self._regressor = np.polyfit(scaled_x[:,0], train_y, deg=self._degree)
 
     def predict(self, predict_x: np.ndarray[float]) -> np.ndarray[float]:
         """Return n predicted outputs of dimension 1 given inputs.
