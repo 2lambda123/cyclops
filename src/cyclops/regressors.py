@@ -432,7 +432,7 @@ class GPModel(RegressionModel):
             np.ndarray[float]: n by 1 array of n predicted 1D values.
         """
         scaled_x = self.prepare_predict(predict_x)
-        return self._regressor.predict(scaled_x).reshape(-1, 1)
+        return self._regressor.predict(scaled_x).reshape(-1)
 
 
 class PModel(RegressionModel):
